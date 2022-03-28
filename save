@@ -13,8 +13,10 @@ declare -A RN
 declare -A ERR
 . lib/.errors
 
+# Show errors and exit
 err() {
-  echo -e "$1"
+  echo -e ${ERR["$1"]}
+  sleep 3
   exit 1
 }
 
@@ -34,6 +36,7 @@ printf "\033[0;92mBackup tag?: "
 read tag
 printf "${NC}"
 
+[[ $GPG ]] || err no_private
 [[ $BACKUP_PATH ]]    || export BACKUP_PATH="$HOME/code/unnamed"
 [[ -d $BACKUP_PATH ]] || ( mkdir -p $BACKUP_PATH && chmod 700 $BACKUP_PATH -R )
 [[ -f $CODE/proj ]]   || initialize
