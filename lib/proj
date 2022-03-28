@@ -4,11 +4,13 @@
 declare -A ERR
 . .errors
 
+# Read error message and exit
 err() {
   echo -e ${ERR["$1"]}
   exit 1
 }
 
+# Read all Error messages TODO define real help
 p_help() {
   for e in "${ERR[@]}"
   do
@@ -16,6 +18,7 @@ p_help() {
   done
 }
 
+# Sort epoch-tailed filenames by date
 index_epoch() {
   snake_case=($( ls -A . | ag '_'| awk -F '_' '{print $NF}'| sort ))
   for c in ${snake_case[@]}
@@ -24,6 +27,7 @@ index_epoch() {
   done
 }
 
+# Create a new Project with this framework
 new_prj() {
   # Guard Clause confirm :project_name exists
   [[ $# -eq 1 ]] || err name_new
@@ -37,6 +41,7 @@ new_prj() {
   pushd $proj/$1                                # Navigate the folder
 }
 
+# Load an existing encrypted project to a secure RAM directory
 load_prj() {
   # Guard Clause confirm :project selected
   [[ $# -eq 1 ]] || err choose_enc
@@ -54,9 +59,11 @@ load_prj() {
   printf '%s\n' ${pack[@]}|xargs -I % rm %     #  Cleanup
 }
 
+# Parse User input
 case $1 in 
   -l|--load_file)
     leaf="$2"
+    index_epoch | grep $leaf
     load_prj $leaf
     ;;
   -n|--new_project)
