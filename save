@@ -36,7 +36,7 @@ printf "\033[0;92mBackup tag?: "
 read tag
 printf "${NC}"
 
-[[ $GPG ]] || err no_private
+[[ $GPG ]]            || err no_private
 [[ $BACKUP_PATH ]]    || export BACKUP_PATH="$HOME/code/unnamed"
 [[ -d $BACKUP_PATH ]] || ( mkdir -p $BACKUP_PATH && chmod 700 $BACKUP_PATH -R )
 [[ -f $CODE/proj ]]   || initialize
