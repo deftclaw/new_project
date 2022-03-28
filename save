@@ -9,6 +9,15 @@ CODE=$HOME/code
 declare -A RN
 . lib/renames
 
+# Load error key
+declare -A ERR
+. lib/.errors
+
+err() {
+  echo -e "$1"
+  exit 1
+}
+
 # Install proj to $HOME/code for creating/loading projects
 initialize() {
   for k in ${!RN[@]}
