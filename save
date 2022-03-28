@@ -1,0 +1,40 @@
+#!/usr/bin/bash
+
+SCR=$(realpath $(dirname ${BASH_SOURCE[0]}))
+LEAF=$(date -u +%s)
+BAK_LIST=($( ls -A $SCR ))
+CODE=$HOME/code
+
+# Key for lib/* files
+declare -A RN
+. lib/renames
+
+# Install proj to $HOME/code for creating/loading projects
+initialize() {
+  for k in ${!RN[@]}
+  do
+    cp lib/$k $CODE/${RN["$k"]}
+  done
+}
+
+printf '%s\n' ${BAK_LIST[@]}
+
+[[ $(pwd) =~ $TMP ]] || cd $TMP
+
+printf "\033[0;92mBackup tag?: "
+read tag
+printf "${NC}"
+
+[[ $BACKUP_PATH ]]    || export BACKUP_PATH="$HOME/code/unnamed"
+[[ -d $BACKUP_PATH ]] || ( mkdir -p $BACKUP_PATH && chmod 700 $BACKUP_PATH -R )
+[[ -f $CODE/proj ]]   || initialize
+
+export LEAF=$tag\_$LEAF
+
+printf "${CYAN}$SCR${NC}\n"
+tar -cjf $LEAF.tbz2 ${BAK_LIST[@]}
+gpg -se -r $GPG $SCR/$LEAF.*
+mv *.gpg $BACKUP_PATH
+rm $LEAF.* 
+export BACKUP_PATH
+echo -e "\e[0;33m$BACKUP_PATH${NC}"

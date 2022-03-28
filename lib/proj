@@ -1,0 +1,72 @@
+#!/usr/bin/bash
+
+# Error Messages
+declare -A ERR
+. .errors
+
+err() {
+  echo -e ${ERR["$1"]}
+  exit 1
+}
+
+p_help() {
+  for e in "${ERR[@]}"
+  do
+    echo -e "$e"
+  done
+}
+
+index_epoch() {
+  snake_case=($( ls -A . | ag '_'| awk -F '_' '{print $NF}'| sort ))
+  for c in ${snake_case[@]}
+  do
+    ls -l *$c
+  done
+}
+
+new_prj() {
+  # Guard Clause confirm :project_name exists
+  [[ $# -eq 1 ]] || err name_new
+  echo 'new project selected'
+  echo $1
+
+  # Create a user-permissioned RAM directory
+  proj=$(mktemp -d)
+  tar -xvf $HOME/.local/lib/empty.tbz2 -C $proj # Copy the project-template
+  mkdir -p $proj/$1                             # Create the project-root
+  pushd $proj/$1                                # Navigate the folder
+}
+
+load_prj() {
+  # Guard Clause confirm :project selected
+  [[ $# -eq 1 ]] || err choose_enc
+  echo 'load file selected'
+  echo $1
+
+  # Create a user-permissioned RAM directory
+  proj=$(mktemp -d)
+ 
+  cp $1 $proj/                                 #  Copy the secure-compressed project-folder
+  pushd $proj                                  #  Navigate to RAM dir
+  gpg $1 && rm $1                              #  Decrypt the secure-compress
+  pack=($(ls . |grep 'bz2\|bzip2\|gz\|gzip'))  #  Find compressed files
+  tar -xf ${pack[@]}                           #  Decompress found files
+  printf '%s\n' ${pack[@]}|xargs -I % rm %     #  Cleanup
+}
+
+case $1 in 
+  -l|--load_file)
+    leaf="$2"
+    load_prj $leaf
+    ;;
+  -n|--new_project)
+    title="$2"
+    new_prj $title
+    ;;
+  -h|--help)
+    p_help
+    ;;
+  *)
+    index_epoch
+    ;;
+esac

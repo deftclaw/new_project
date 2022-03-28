@@ -1,0 +1,5 @@
+#!/usr/bin/bash
+
+ERR["name_new"]="\033[0;33mUsage: new project\n  ./index -n <project_name>${NC}"
+ERR["choose_enc"]="\033[0;33mUsage: load file\n  ./index -l <*.tbz2.gpg>${NC}"
+
