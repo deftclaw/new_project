@@ -23,7 +23,7 @@ and is only accessible to you, (or whoever has your private PGP key).
 __Creating a new Project:__  
 Start in $HOME/code: `cd $HOME/code`  
 Initilize to RAM: `. proj -n some_project_name`  
-  - Because we 'sourced' the script it should navigate you to the folder automatically.
+Because we 'sourced' the script it should navigate you to the folder automatically.  
 Make some changes to the project (optional)  
 
 __Save & Initialize static Directory:__  
