@@ -16,7 +16,7 @@ declare -A ERR
 # Show errors and exit
 err() {
   echo -e ${ERR["$1"]}
-  sleep 3
+  read -p 'Press <Enter> to continue...'
   exit 1
 }
 
