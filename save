@@ -26,6 +26,10 @@ initialize() {
   do
     cp lib/$k $CODE/${RN["$k"]}
   done
+  [[ -d $HOME/.local/lib ]] || mkdir -p $HOME/.local/lib
+  curl \
+    -o $HOME/.local/lib/empty.tbz2 \
+    -L https://github.com/deftclaw/new_project/releases/download/0.1.0/empty.tbz2
 }
 
 printf '%s\n' ${BAK_LIST[@]}
